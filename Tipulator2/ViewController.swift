@@ -9,7 +9,8 @@
 import UIKit
 
 class ViewController: UIViewController {
-    
+
+    let wholeViewButon = UIButton()
     let woodImage = UIImage(named: "Wood")
     var pinkTotalNote = UIImage(named: "Pink")
     var totalLabel = UILabel()
@@ -50,7 +51,12 @@ class ViewController: UIViewController {
         view.addSubview(blueNoteView)
         view.addSubview(greenNoteView)
         view.addSubview(tipNoteView)
+        view.addSubview(wholeViewButon)
         view.addSubview(percentSignButton)
+        
+        // Adding target
+        percentSignButton.addTarget(self, action: #selector(addAmountAlert), for: .touchUpInside)
+        wholeViewButon.addTarget(self, action: #selector(dismissKeyboardNow), for: .touchDown)
         
         // Setting up the text and whatnot
         totalLabel.text = "Total:"
@@ -59,6 +65,7 @@ class ViewController: UIViewController {
         totalAmountTextField.placeholder = "Enter here..."
         totalAmountTextField.font = UIFont(name: "Marker Felt", size: 35)
         totalAmountTextField.textAlignment = .center
+        totalAmountTextField.keyboardType = .decimalPad
         tipAmountLabel.text = "Tip Amount:"
         tipAmountLabel.textColor = .black
         tipAmountLabel.font = UIFont(name: "Marker Felt", size: 30)
@@ -87,6 +94,7 @@ class ViewController: UIViewController {
     
     func setUpNoteConstraints() {
         
+        wholeViewButon.translatesAutoresizingMaskIntoConstraints = false
         woodBackground.translatesAutoresizingMaskIntoConstraints = false
         pinkNoteView.translatesAutoresizingMaskIntoConstraints = false
         blueNoteView.translatesAutoresizingMaskIntoConstraints = false
@@ -106,7 +114,10 @@ class ViewController: UIViewController {
         let woodHeight = NSLayoutConstraint(item: woodBackground, attribute: .height, relatedBy: .equal, toItem: view, attribute: .height, multiplier: 1, constant: 0)
         let woodWidth = NSLayoutConstraint(item: woodBackground, attribute: .width, relatedBy: .equal, toItem: view, attribute: .width, multiplier: 1, constant: 0)
         
-        view.addConstraints([woodHeight, woodWidth])
+        let wholeViewHeight = NSLayoutConstraint(item: wholeViewButon, attribute: .height, relatedBy: .equal, toItem: view, attribute: .height, multiplier: 1, constant: 0)
+        let wholeViewWidth = NSLayoutConstraint(item: wholeViewButon, attribute: .width, relatedBy: .equal, toItem: view, attribute: .width, multiplier: 1, constant: 0)
+        
+        view.addConstraints([woodHeight, woodWidth, wholeViewHeight, wholeViewWidth])
         
         // Set up note heights
         let pinkHeight = NSLayoutConstraint(item: pinkNoteView, attribute: .height, relatedBy: .equal, toItem: blueNoteView, attribute: .height, multiplier: 1, constant: 0)
@@ -160,5 +171,59 @@ class ViewController: UIViewController {
         view.addConstraints([totalLabelTop, totalLabelLeading, totalAmountTop, tipAmountTop, totalAmountLeading, tipAmountLeading, tipPriceTop, tipPriceLeading, grandTotalTop, grandTotalLeading, grandAmountTop, grandAmountLeading, tapLabelbottom, tapLabelLeading])
         
     }
+    
+    @objc func calculateThe(total: Double, with percent: Int) -> Double {
+        let total = total
+        let tipPercent: Double = Double(percent) / 100
+        
+        let tipAmount = total * tipPercent
+        let totalAmount = tipAmount + total
+        return totalAmount.rounded(toPlaces: 2)
+    }
+    
+    @objc func calculateTipWith(total: Double, with percent: Int) -> Double {
+        let total = total
+        let tipPercent: Double = Double(percent) / 100
+        let tipAmount = total * tipPercent
+        return tipAmount.rounded(toPlaces: 2)
+    }
+    
+    @objc func addAmountAlert() {
+        let amountAlert = UIAlertController(title: "Tip Percent", message: "Type the percent you would like to tip", preferredStyle: .alert)
+        
+        var percentTextField: UITextField?
+        amountAlert.addTextField { (percentField) in
+            percentTextField = percentField
+            percentTextField?.keyboardType = .decimalPad
+        }
+        
+        let okAction = UIAlertAction(title: "Done", style: .default) { (_) in
+            guard let totalString = self.totalAmountTextField.text, totalString != "",
+                let total = Double(totalString),
+                let percentString = percentTextField?.text, percentString != "",
+                let percent = Int(percentString) else { return }
+            
+            let calcTotal = self.calculateThe(total: total, with: percent)
+            self.grandAmountLabel.text = "$ \(calcTotal)"
+            
+            let calcTip = self.calculateTipWith(total: total, with: percent)
+            self.tipPriceLabel.text = "$ \(calcTip)"
+        }
+        
+        amountAlert.addAction(okAction)
+        
+        present(amountAlert, animated: true, completion: nil)
+    }
+    
+    @objc func dismissKeyboardNow() {
+        view.endEditing(true)
+    }
 }
 
+extension Double {
+    /// Rounds the double to decimal places value
+    func rounded(toPlaces places:Int) -> Double {
+        let divisor = pow(10.0, Double(places))
+        return (self * divisor).rounded() / divisor
+    }
+}

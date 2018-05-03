@@ -40,27 +40,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        mySlider.minimumValue = 0
-//        mySlider.maximumValue = 100
-//        mySlider.isContinuous = false
-//        mySlider.tintColor = UIColor.green
-//        mySlider.addTarget(self, action: #selector(sliderValueDidChange(_:total:percent:)), for: .valueChanged)
-//        tipAmountLabel.text = "\(Int(mySlider.value))"
-        
         setUpNotes()
         setUpNoteConstraints()
     }
-    
-//    @objc func sliderValueDidChange(_ sender:UISlider!, total: Double, percent: Int) {
-//        let calcTotal = calculateThe(total: total, with: percent)
-//        let calcTip = calculateTipWith(total: total, with: percent)
-//        let wholePercent = "\(String(describing: percentSign.text))"
-//        self.grandAmountLabel.text = "$ \(calcTotal)"
-//        self.tipPriceLabel.text = "$ \(calcTip)"
-//        self.percentSign.text = "%" + " " + wholePercent
-//        let roundedStepValue = round(sender.value / step) * step
-//        sender.value = roundedStepValue
-//    }
     
     func setUpNotes() {
         
@@ -70,13 +52,7 @@ class ViewController: UIViewController {
         greenNoteView = UIImageView(image: greenGrandTotalNote)
         tipNoteView = UIImageView(image: tipNote)
         addPercentButton.imageView?.image = UIImage(named: "PercentSign")
-//        addPercentButton.setImage(UIImage(named: "PercentSign"), for: .normal)
-        
-//        clearButton.text = "(Clear All)"
-//        clearButton.textColor = .white
-//        clearButton.font = UIFont(name: "Marker Felt", size: 20)
-//        clearButton.isUserInteractionEnabled = true
-        
+
         view.addSubview(woodBackground)
         view.addSubview(pinkNoteView)
         view.addSubview(blueNoteView)
@@ -84,12 +60,10 @@ class ViewController: UIViewController {
         view.addSubview(tipNoteView)
         view.addSubview(wholeViewButon)
         view.addSubview(addPercentButton)
-//        view.addSubview(clearButton)
         
         // Adding target
         addPercentButton.addTarget(self, action: #selector(addAmountAlert), for: .touchUpInside)
         wholeViewButon.addTarget(self, action: #selector(dismissKeyboardNow), for: .touchDown)
-//        clearButton.addTarget(self, action: #selector(clearAll), for: .touchDown)
         
         // Setting up the text and whatnot
         totalLabel.text = "Total:"
@@ -130,7 +104,6 @@ class ViewController: UIViewController {
         view.addSubview(grandAmountLabel)
         view.addSubview(tapToAddLabel)
         view.addSubview(percentSign)
-//        view.addSubview(mySlider)
     }
     
     func setUpNoteConstraints() {
@@ -142,7 +115,6 @@ class ViewController: UIViewController {
         greenNoteView.translatesAutoresizingMaskIntoConstraints = false
         tipNoteView.translatesAutoresizingMaskIntoConstraints = false
         addPercentButton.translatesAutoresizingMaskIntoConstraints = false
-//        clearButton.translatesAutoresizingMaskIntoConstraints = false
         
         totalLabel.translatesAutoresizingMaskIntoConstraints = false
         dollarSign.translatesAutoresizingMaskIntoConstraints = false
@@ -153,7 +125,6 @@ class ViewController: UIViewController {
         grandAmountLabel.translatesAutoresizingMaskIntoConstraints = false
         tapToAddLabel.translatesAutoresizingMaskIntoConstraints = false
         percentSign.translatesAutoresizingMaskIntoConstraints = false
-//        mySlider.translatesAutoresizingMaskIntoConstraints = false
         
         // Set up background
         let woodHeight = NSLayoutConstraint(item: woodBackground, attribute: .height, relatedBy: .equal, toItem: view, attribute: .height, multiplier: 1, constant: 0)
@@ -183,11 +154,6 @@ class ViewController: UIViewController {
         let greenTop = NSLayoutConstraint(item: greenNoteView, attribute: .top, relatedBy: .equal, toItem: blueNoteView, attribute: .bottom, multiplier: 1, constant: 20)
         let greenLeading = NSLayoutConstraint(item: greenNoteView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1, constant: 30)
         let greenWidth = NSLayoutConstraint(item: greenNoteView, attribute: .width, relatedBy: .equal, toItem: blueNoteView, attribute: .width, multiplier: 1, constant: 0)
-        
-//        let mySliderTop = NSLayoutConstraint(item: mySlider, attribute: .top, relatedBy: .equal, toItem: greenNoteView, attribute: .bottom, multiplier: 1, constant: 20)
-//        let mySliderWidth = NSLayoutConstraint(item: mySlider, attribute: .width, relatedBy: .equal, toItem: view, attribute: .width, multiplier: 0.75, constant: 0)
-//
-//        view.addConstraints([mySliderTop, mySliderWidth])
         
         let tipTop = NSLayoutConstraint(item: tipNoteView, attribute: .top, relatedBy: .equal, toItem: greenNoteView, attribute: .bottom, multiplier: 1, constant: 90)
         let tipBottom = NSLayoutConstraint(item: tipNoteView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: -30)
@@ -226,12 +192,6 @@ class ViewController: UIViewController {
         let percentSignLeading = NSLayoutConstraint(item: percentSign, attribute: .leading, relatedBy: .equal, toItem: tipNoteView, attribute: .leading, multiplier: 1, constant: 40)
         
         view.addConstraints([totalLabelTop, totalLabelLeading, dollarSigntop, dollarSignTrailing, totalAmountTop, totalAmountLeading, tipAmountTop, tipAmountLeading, tipPriceTop, tipPriceLeading, grandTotalTop, grandTotalLeading, grandAmountTop, grandAmountLeading, tapLabelbottom, tapLabelLeading, percentSignHeight, percentSignTop, percentSignLeading])
-        
-//        let clearButtonLeading = NSLayoutConstraint(item: clearButton, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1, constant: 12)
-//        let clearButtonTop = NSLayoutConstraint(item: clearButton, attribute: .top, relatedBy: .equal, toItem: tapToAddLabel, attribute: .bottom, multiplier: 1, constant: 8)
-//
-//        view.addConstraints([clearButtonLeading, clearButtonTop])
-        
     }
     
     @objc func calculateThe(total: Double, with percent: Int) -> Double {
@@ -294,11 +254,4 @@ class ViewController: UIViewController {
     @objc func dismissKeyboardNow() {
         view.endEditing(true)
     }
-    
-//    @objc func clearAll() {
-//        totalAmountTextField.text = ""
-//        tipPriceLabel.text = "$ 0.00"
-//        grandAmountLabel.text = "$ 0.00"
-//        percentSign.text = "% 0"
-//    }
 }
